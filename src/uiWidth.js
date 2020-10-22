@@ -1,36 +1,32 @@
-// var jsInitChecktimer = setInterval (checkForTableLoad, 500);
+// Global Vars
+var jsInitChecktimer;
 
-// DEBUG
 function onError(error) {
     console.log(`Error: ${error}`);
 }
 
-function onGot(item) {
-    let colour = "blue";
-    if (item.colour) {
-        colour = item.colour;
+function checkURL(item) {
+    // Ensure current url matches configured url in options
+    if (window.location.href == item.ubw_url) {
+        jsInitChecktimer = setInterval (checkForTableLoad, 500);
     }
-    document.body.style.border = "10px solid " + colour;
 }
 
-let getting = browser.storage.local.get("colour");
-getting.then(onGot, onError);
-
 function checkForTableLoad () {
-    //Ensure not on Login/Logout screen
+    // Ensure not on Login/Logout screen
     if (document.body.className == 'u4-login-body'){
         clearInterval (jsInitChecktimer);
     } else {
-        //Ensure body is loaded
+        // Ensure body is loaded
         if (typeof document.body.id != "undefined"){
             var body_id_ref = "#" + document.body.id;
-            //Ensure iframe is loaded
+            // Ensure iframe is loaded
             if (typeof $(body_id_ref).contents().find("iframe")[0] != "undefined"){
                 var iframe_id = $(body_id_ref).contents().find("iframe")[0].id;
                 var iframe_id_ref = "#" + iframe_id;
-                //Ensure MainTable is loaded
+                // Ensure MainTable is loaded
                 if ($($(iframe_id_ref).contents().find('#contentContainerFrame')[0].contentWindow.document).find('.MainTable').length >= 1){
-                    //Ensure Child Table is loaded
+                    // Ensure Child Table is loaded
                     if ($($(iframe_id_ref).contents().find('#contentContainerFrame')[0].contentWindow.document).find('#b_s89_g89s90').length >= 1){
                         clearInterval (jsInitChecktimer);
 
@@ -42,3 +38,6 @@ function checkForTableLoad () {
         }
     }
 }
+
+let getting_ubw_url = browser.storage.local.get("ubw_url");
+getting_ubw_url.then(checkURL, onError);
