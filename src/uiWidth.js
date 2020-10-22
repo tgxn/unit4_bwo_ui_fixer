@@ -1,4 +1,20 @@
-var jsInitChecktimer = setInterval (checkForTableLoad, 500);
+// var jsInitChecktimer = setInterval (checkForTableLoad, 500);
+
+// DEBUG
+function onError(error) {
+    console.log(`Error: ${error}`);
+}
+
+function onGot(item) {
+    let colour = "blue";
+    if (item.colour) {
+        colour = item.colour;
+    }
+    document.body.style.border = "10px solid " + colour;
+}
+
+let getting = browser.storage.local.get("colour");
+getting.then(onGot, onError);
 
 function checkForTableLoad () {
     //Ensure not on Login/Logout screen
